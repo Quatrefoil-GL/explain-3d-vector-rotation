@@ -37,7 +37,7 @@
                 screen-x $ wo-log (calc-unit-x-axis look-distance)
                 screen-y $ wo-log (calc-unit-y-axis look-distance)
                 s $ noted "\"cone back scale" 0.5
-                targets $ [][] (80 70 -90) (; 50 90 -70)
+                targets $ [][] (80 70 -50) (; 50 90 -70)
                 projections $ map targets
                   fn (p) (transform-3d p look-distance s)
               scene ({})
@@ -48,27 +48,34 @@
                     :points $ [] (v-scale look-distance 5)
                       v-scale look-distance $ negate s
                     :material $ assoc style-line :color 0xaaaaee
-                noted "\"look point" $ group ({})
-                  sphere $ {} (:radius 1) (:position look-distance)
-                    :material $ assoc style-point :color 0xffffaa
-                  text $ {} (:text |C) (:size 0.8) (:height 0.5)
-                    :material $ assoc style-point :color 0xffffaa
-                    :position $ v+ look-distance ([] 1 0 1)
                 group ({}) & $ map-indexed projections
-                  fn (idx pro) (comp-point-explain idx pro look-distance screen-x screen-y s)
-                comp-grid look-distance screen-x screen-y
-                group ({})
-                  sphere $ {} (:radius 1) (:material style-point)
-                  text $ {} (:text |O) (:material style-point) (:size 0.8) (:height 0.5)
-                    :position $ [] 1 0 1
-                if (not= s 0)
-                  group ({})
-                    sphere $ {} (:radius 1) (:material style-point)
-                      :position $ v-scale look-distance (negate s)
-                    text $ {} (:text |S) (:material style-point) (:size 0.8) (:height 0.5)
-                      :position $ v+
-                        v-scale look-distance $ negate s
-                        [] -1 -2 0
+                  fn (idx pro)
+                    let
+                        q-point $ v-scale look-distance (:scale pro)
+                        distance-v $ v- (:p0 pro) q-point
+                        next-axis $ v-scale (cross-unit distance-v look-distance) (v-length distance-v)
+                      group ({})
+                        comp-mark-point $ {} (:label "\"P") (:color 0xffffff)
+                          :position $ :p0 pro
+                        mesh-line $ {}
+                          :points $ [] (:p0 pro) (do q-point) (v+ q-point next-axis)
+                          :material $ assoc style-bold-line :color 0xccccff
+                        comp-mark-point $ {} (:label "\"Q") (:color nil)
+                          :position $ v-scale look-distance (:scale pro)
+                        comp-mark-point $ {} (:label "\"R") (:color 0xaaaaff)
+                          :position $ v+ q-point next-axis
+                        line $ {}
+                          :points $ let
+                              d 0.4
+                            -> 16 range $ map
+                              fn (idx)
+                                wo-js-log $ v+ q-point
+                                  v-scale distance-v $ cos (* idx d)
+                                  v-scale next-axis $ sin (* idx d)
+                          :material $ assoc style-line :color 0x555533
+                ; comp-grid look-distance screen-x screen-y
+                comp-mark-point $ {} (:label |O) (:color nil)
+                  :position $ [] 0 0 0
                 point-light $ {} (:color 0xffffff) (:intensity 1.4) (:distance 200)
                   :position $ [] 20 40 50
                 ; point-light $ {} (:color 0xffffff) (:intensity 2) (:distance 200)
@@ -122,76 +129,25 @@
                             v-scale screen-y $ * -5 gap
                             v-scale screen-x $ * 20 i
                   :material $ {} (:kind :line-basic) (:color 0x6677aa) (:opacity 0.4) (:transparent true)
-                line-segments $ {} (:position look-distance)
-                  :segments $ []
-                    []
-                      v+ (v-scale screen-y -18) (v-scale screen-x 32)
-                      v+ (v-scale screen-y 18) (v-scale screen-x 32)
-                    []
-                      v+ (v-scale screen-y -18) (v-scale screen-x -32)
-                      v+ (v-scale screen-y 18) (v-scale screen-x -32)
-                    []
-                      v+ (v-scale screen-y -18) (v-scale screen-x 32)
-                      v+ (v-scale screen-y -18) (v-scale screen-x -32)
-                    []
-                      v+ (v-scale screen-y 18) (v-scale screen-x 32)
-                      v+ (v-scale screen-y 18) (v-scale screen-x -32)
-                  :material $ {} (:kind :line-basic) (:color 0xaaaa88) (:opacity 0.9) (:transparent true)
-        |comp-point-explain $ quote
-          defn comp-point-explain (idx pro look-distance screen-x screen-y s)
-            let
-                point-on-screen $ let[] (x y) (:shadow pro)
-                  v+ look-distance $ v+ (v-scale screen-x x) (v-scale screen-y y)
-                screen-near $ v+ look-distance
-                  v-scale screen-x $ :x pro
-              group ({})
-                sphere $ {} (:radius 1)
-                  :material $ assoc style-point :color 0xffffff
-                  :position $ :p0 pro
-                text $ {} (:material style-point) (:size 1.2) (:height 0.5)
-                  :text $ point-label "\"P " idx
-                  :position $ v+ (:p0 pro) ([] 2 0 1)
-                line $ {}
-                  :points $ [] (:p0 pro)
-                    v-scale look-distance $ negate s
-                  :material $ assoc style-line :color 0xeeaaff
-                group ({})
-                  sphere $ {} (:radius 2) (:material style-point) (:position point-on-screen)
-                  text $ {} (:material style-point) (:size 1.2) (:height 0.5)
-                    :text $ point-label "\"P' " idx
-                    :position $ v+ point-on-screen ([] 2 0 1)
-                  line $ {}
-                    :points $ [] point-on-screen look-distance
-                    :material $ assoc style-line :color 0x555533
-                  line $ {}
-                    :points $ [] (:p0 pro)
-                      v-scale look-distance $ :scale pro
-                    :material $ assoc style-line :color 0x555533
-                  sphere $ {} (:radius 1) (:material style-point)
-                    :position $ v-scale look-distance (:scale pro)
-                  text $ {} (:material style-point) (:size 1.2) (:height 0.5)
-                    :text $ point-label "\"Q " idx
-                    :position $ v+
-                      v-scale look-distance $ :scale pro
-                      [] 2 0 1
-                group ({})
-                  mesh-line $ {}
-                    :points $ [] look-distance screen-near
-                    :material style-bold-line
-                  sphere $ {} (:radius 1) (:material style-point) (:position screen-near)
-                  text $ {} (:material style-point) (:size 0.8) (:height 0.5)
-                    :text $ point-label "\"B " idx
-                    :position $ v+ screen-near ([] 1 0 1)
-                  mesh-line $ {}
-                    :points $ [] point-on-screen screen-near
-                    :material style-bold-line
+        |comp-mark-point $ quote
+          defn comp-mark-point (props)
+            group
+              {} $ :position (:position props)
+              sphere $ {} (:radius 1)
+                :material $ assoc style-point :color (:color props)
+              text $ {}
+                :material $ assoc style-point :color (:color props)
+                :size 1.2
+                :height 0.5
+                :text $ :label props
+                :position $ [] 2 0 1
         |point-label $ quote
           defn point-label (t idx)
             if (> idx 0) (str t "\" " idx) t
         |square $ quote
           defn square (x) (pow x 2)
         |style-bold-line $ quote
-          def style-bold-line $ {} (:kind :mesh-line) (:color 0xaaaaff) (:transparent true) (:opacity 0.6) (:depthTest true) (:lineWidth 0.3)
+          def style-bold-line $ {} (:kind :mesh-line) (:color 0xaaaaff) (:transparent true) (:opacity 0.6) (:depthTest true) (:lineWidth 0.6)
         |style-line $ quote
           def style-line $ {} (:kind :line-basic) (:color 0x5555aa) (:opacity 0.9) (:transparent true)
         |style-point $ quote
@@ -237,6 +193,7 @@
           quatrefoil.alias :refer $ group box sphere point-light ambient-light perspective-camera scene text line line-segments mesh-line
           quatrefoil.core :refer $ defcomp >>
           quatrefoil.math :refer $ v-scale v+ v-
+          app.math :refer $ v-length cross-unit
     |app.comp.nav $ {}
       :defs $ {}
         |comp-nav $ quote
@@ -352,6 +309,27 @@
           respo.core :as respo
           respo.core :refer $ defcomp defeffect <> >> div button textarea span input
           app.comp.nav :refer $ comp-nav
+    |app.math $ {}
+      :defs $ {}
+        |cross-unit $ quote
+          defn cross-unit (p1 p2)
+            let-sugar
+                  [] a b c
+                  , p1
+                ([] x y z) p2
+                v $ []
+                  - (* b z) (* c y)
+                  - (* c x) (* a z)
+                  - (* a y) (* b x)
+                l $ v-length v
+              v-scale v $ / 1 l
+        |v-length $ quote
+          defn v-length (v)
+            let[] (x y z) v $ sqrt
+              + (* x x) (* y y) (* z z)
+      :ns $ quote
+        ns app.math $ :require
+          quatrefoil.math :refer $ v-scale
     |app.updater $ {}
       :defs $ {}
         |updater $ quote
