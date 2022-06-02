@@ -1,0 +1,41 @@
+
+@import url("@quamolit/touch-control/style/touch-control.css");
+
+body {
+  margin: 0;
+  overscroll-behavior-y: none;
+}
+
+body * {
+  box-sizing: border-box;
+  flex-shrink: 0;
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: hsla(0,0%,100%);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: hsla(200,100%,76%,0.8);
+}
+
+::-webkit-scrollbar-corner {
+  background-color: transparent;
+}
+
+::-webkit-resizer {
+  background-color:transparent;
+}
+
+.md-code-block {
+  font-size: 12px;
+  background-color: hsla(0, 0%, 86%, 0.9);
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+  border-radius: 4px;
+}
