@@ -43,11 +43,12 @@
               scene ({})
                 ambient-light $ {} (:color 0x666666)
                 comp-axis
-                noted "\"look direction" $ line
+                comp-mark-point $ {} (:label "\"C") (:color 0xffffff) (:position look-distance)
+                noted "\"look direction" $ mesh-line
                   {}
                     :points $ [] (v-scale look-distance 5)
                       v-scale look-distance $ negate s
-                    :material $ assoc style-line :color 0xaaaaee
+                    :material $ assoc style-bold-line :color 0x44aa44
                 group ({}) & $ map-indexed projections
                   fn (idx pro)
                     let
@@ -58,21 +59,24 @@
                         comp-mark-point $ {} (:label "\"P") (:color 0xffffff)
                           :position $ :p0 pro
                         mesh-line $ {}
-                          :points $ [] (:p0 pro) (do q-point) (v+ q-point next-axis)
+                          :points $ [] (:p0 pro) q-point
                           :material $ assoc style-bold-line :color 0xccccff
                         comp-mark-point $ {} (:label "\"Q") (:color nil)
                           :position $ v-scale look-distance (:scale pro)
+                        mesh-line $ {}
+                          :points $ [] q-point (v+ q-point next-axis)
+                          :material $ assoc style-bold-line :color 0xccccff
                         comp-mark-point $ {} (:label "\"R") (:color 0xaaaaff)
                           :position $ v+ q-point next-axis
-                        line $ {}
+                        mesh-line $ {}
                           :points $ let
-                              d 0.4
-                            -> 16 range $ map
+                              d 0.02
+                            -> 320 range $ map
                               fn (idx)
                                 wo-js-log $ v+ q-point
                                   v-scale distance-v $ cos (* idx d)
                                   v-scale next-axis $ sin (* idx d)
-                          :material $ assoc style-line :color 0x555533
+                          :material $ assoc style-bold-line :color 0xff5533
                 ; comp-grid look-distance screen-x screen-y
                 comp-mark-point $ {} (:label |O) (:color nil)
                   :position $ [] 0 0 0
@@ -137,7 +141,7 @@
                 :material $ assoc style-point :color (:color props)
               text $ {}
                 :material $ assoc style-point :color (:color props)
-                :size 1.2
+                :size 6.0
                 :height 0.5
                 :text $ :label props
                 :position $ [] 2 0 1
@@ -147,7 +151,7 @@
         |square $ quote
           defn square (x) (pow x 2)
         |style-bold-line $ quote
-          def style-bold-line $ {} (:kind :mesh-line) (:color 0xaaaaff) (:transparent true) (:opacity 0.6) (:depthTest true) (:lineWidth 0.6)
+          def style-bold-line $ {} (:kind :mesh-line) (:color 0xaaaaff) (:transparent true) (:opacity 0.9) (:depthTest true) (:lineWidth 1)
         |style-line $ quote
           def style-line $ {} (:kind :line-basic) (:color 0x5555aa) (:opacity 0.9) (:transparent true)
         |style-point $ quote
