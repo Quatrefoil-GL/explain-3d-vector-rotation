@@ -44,10 +44,12 @@
                   targets $ [][] (80 70 -50) (; 50 90 -70)
                   projections $ map targets
                     fn (p) (transform-3d p look-distance s)
-                  scaled 0.02
+                  scaled 0.006
                 scene ({})
                   group
-                    {} $ :scale ([] scaled scaled scaled)
+                    {}
+                      :scale $ [] scaled scaled scaled
+                      :position $ [] 0 0.9 -0.2
                     ambient-light $ {} (:color 0x666666)
                     comp-axis
                     comp-mark-point $ {} (:label "\"C") (:color 0xffffff) (:position look-distance)
@@ -152,7 +154,7 @@
                 text $ {}
                   :material $ assoc style-point :color (:color props)
                   :size 6.0
-                  :height 0.5
+                  :depth 0.5
                   :text $ :label props
                   :position $ [] 2 0 1
         |point-label $ %{} :CodeEntry (:doc |)
@@ -164,7 +166,7 @@
             defn square (x) (pow x 2)
         |style-bold-line $ %{} :CodeEntry (:doc |)
           :code $ quote
-            def style-bold-line $ {} (:kind :mesh-line) (:color 0xaaaaff) (:transparent true) (:opacity 0.9) (:depthTest true) (:lineWidth 1)
+            def style-bold-line $ {} (:kind :mesh-line) (:color 0xaaaaff) (:transparent true) (:opacity 0.9) (:depthTest true) (:lineWidth 0.02)
         |style-line $ %{} :CodeEntry (:doc |)
           :code $ quote
             def style-line $ {} (:kind :line-basic) (:color 0x5555aa) (:opacity 0.9) (:transparent true)
