@@ -217,7 +217,7 @@
             quatrefoil.alias :refer $ group box sphere point-light ambient-light perspective-camera scene text line line-segments mesh-line
             quatrefoil.core :refer $ defcomp >>
             app.math :refer $ v-length cross-unit
-            quaternion.core :refer $ v-scale v+ v-
+            quaternion.vector :refer $ v-scale v+ v-
     |app.comp.nav $ %{} :FileEntry
       :defs $ {}
         |comp-nav $ %{} :CodeEntry (:doc |)
@@ -275,7 +275,7 @@
       :defs $ {}
         |dev? $ %{} :CodeEntry (:doc |)
           :code $ quote
-            def dev? $ = "\"dev" (get-env "\"mode" "\"release")
+            def dev? $ = "\"dev" (option:unwrap-or (get-env "\"mode") "\"release")
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote (ns app.config)
     |app.main $ %{} :FileEntry
@@ -371,7 +371,7 @@
       :ns $ %{} :CodeEntry (:doc |)
         :code $ quote
           ns app.math $ :require
-            quaternion.core :refer $ v-scale
+            quaternion.vector :refer $ v-scale
     |app.updater $ %{} :FileEntry
       :defs $ {}
         |updater $ %{} :CodeEntry (:doc |)
