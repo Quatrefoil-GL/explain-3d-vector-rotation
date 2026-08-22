@@ -40,11 +40,11 @@
           :code $ quote
             defcomp comp-container (store)
               let
-                  states $ :states store
-                  cursor $ :cursor states
-                  state $ either (:data states)
+                  states $ field store :states
+                  cursor $ field states :cursor
+                  state $ either (field states :data)
                     {} $ :tab :portal
-                  tab $ :tab state
+                  tab $ field state :tab
                   look-distance $ [] 20 30 -60
                   screen-x $ wo-log (calc-unit-x-axis look-distance)
                   screen-y $ wo-log (calc-unit-y-axis look-distance)
@@ -69,17 +69,17 @@
                     group ({}) & $ map-indexed projections
                       fn (idx pro)
                         let
-                            q-point $ v-scale look-distance (:scale pro)
-                            distance-v $ v- (:p0 pro) q-point
+                            q-point $ v-scale look-distance (field pro :scale)
+                            distance-v $ v- (field pro :p0) q-point
                             next-axis $ v-scale (cross-unit distance-v look-distance) (v-length distance-v)
                           group ({})
                             comp-mark-point $ {} (:label |P) (:color 0xffffff)
-                              :position $ :p0 pro
+                              :position $ field pro :p0
                             mesh-line $ {}
-                              :points $ [] (:p0 pro) q-point
+                              :points $ [] (field pro :p0) q-point
                               :material $ assoc style-bold-line :color 0xccccff
                             comp-mark-point $ {} (:label |Q) (:color nil)
-                              :position $ v-scale look-distance (:scale pro)
+                              :position $ v-scale look-distance (field pro :scale)
                             mesh-line $ {}
                               :points $ [] q-point (v+ q-point next-axis)
                               :material $ assoc style-bold-line :color 0xccccff
@@ -162,15 +162,21 @@
           :code $ quote
             defn comp-mark-point (props)
               group
-                {} $ :position (:position props)
+                {} $ :position (field props :position)
                 sphere $ {} (:radius 1)
-                  :material $ assoc style-point :color (:color props)
+                  :material $ assoc style-point :color (field props :color)
                 text $ {}
-                  :material $ assoc style-point :color (:color props)
+                  :material $ assoc style-point :color (field props :color)
                   :size 6.0
                   :depth 0.5
-                  :text $ :label props
+                  :text $ field props :label
                   :position $ [] 2 0 1
+          :examples $ []
+          :schema $ :: 'Dynamic
+        |field $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn field (value key)
+              option:unwrap-or (get value key) nil
           :examples $ []
           :schema $ :: 'Dynamic
         |point-label $ %{} 'CodeEntry (:doc |)
@@ -254,15 +260,15 @@
           :code $ quote
             defcomp comp-nav (store states)
               let
-                  cursor $ :cursor states
-                  state $ or (:data states)
+                  cursor $ field states :cursor
+                  state $ or (field states :data)
                     {} $ :menu? false
                 div
                   {} $ :class-name css-nav
                   a $ {} (:inner-text |Menu) (:class-name css/link)
                     :on-click $ fn (e d!)
                       d! cursor $ update state :menu? not
-                  if (:menu? state)
+                  if (field state :menu?)
                     div
                       {} $ :class-name css-pop-menu
                       =< nil 24
@@ -283,6 +289,12 @@
               |$0 $ {} (:max-height |90vh) (:border-radius |6px) (:padding "|8px 8px") (:z-index 900) (:position :fixed) (:left 8) (:top 32) (:overflow :auto)
                 :color $ hsl 0 0 30
                 :background-color $ hsl 0 0 100 0.9
+          :examples $ []
+          :schema $ :: 'Dynamic
+        |field $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn field (value key)
+              option:unwrap-or (get value key) nil
           :examples $ []
           :schema $ :: 'Dynamic
         |load-content $ %{} 'CodeEntry (:doc |)
@@ -339,12 +351,30 @@
                   reset! *store store
           :examples $ []
           :schema $ :: 'Dynamic
+        |ffi-object $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn ffi-object (value) (unsafe-coerce value JsObject)
+          :examples $ []
+          :schema $ :: 'Dynamic
+        |field $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn field (value key)
+              option:unwrap-or (get value key) nil
+          :examples $ []
+          :schema $ :: 'Dynamic
+        |js-number $ %{} 'CodeEntry (:doc |)
+          :code $ quote
+            defn js-number (value) (unsafe-coerce value Number)
+          :examples $ []
+          :schema $ :: 'Dynamic
         |main! $ %{} 'CodeEntry (:doc |)
           :code $ quote
             defn main! ()
               when dev? (load-console-formatter!) (println "|Run in dev mode")
               set-perspective-camera! $ {} (:fov 45)
-                :aspect $ / js/window.innerWidth js/window.innerHeight
+                :aspect $ /
+                  js-number $ .-innerWidth (ffi-object js/window)
+                  js-number $ .-innerHeight (ffi-object js/window)
                 :near 0.1
                 :far 1000
                 :position $ [] 0 0 100
@@ -381,7 +411,7 @@
             defn render-app! () (; println "|Render app:")
               render-canvas! (comp-container @*store) dispatch!
               respo/render! mount-target
-                comp-nav @*store $ >> (:states @*store) :dom
+                comp-nav @*store $ >> (field @*store :states) :dom
                 , dispatch!
           :examples $ []
           :schema $ :: 'Dynamic

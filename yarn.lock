@@ -419,6 +419,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dayjs@npm:^1.11.13":
+  version: 1.11.23
+  resolution: "dayjs@npm:1.11.23"
+  checksum: 10c0/69ab04bf19c676e44ab50cc2fca223d265f3dafd107151ef3b0f3ad74d360c37caa602abe62f87cb25d90bd9f6bee003698af47df5b0dbf10a998b7b5f3bb3f1
+  languageName: node
+  linkType: hard
+
 "dom-walk@npm:^0.1.0":
   version: 0.1.2
   resolution: "dom-walk@npm:0.1.2"
@@ -588,6 +595,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hsluv@npm:^1.0.1":
+  version: 1.0.2
+  resolution: "hsluv@npm:1.0.2"
+  checksum: 10c0/1baa35d582ba88d45c3b7d0442c14b716df25eccb99c5b1b44bbf3c08a278e53c3aa0abfedca19e695603bb6f0d1e1f438660f2aca1227461a2b9d9c361b8999
+  languageName: node
+  linkType: hard
+
 "individual@npm:^3.0.0":
   version: 3.0.0
   resolution: "individual@npm:3.0.0"
@@ -606,6 +620,15 @@ __metadata:
   version: 4.0.0
   resolution: "isexe@npm:4.0.0"
   checksum: 10c0/5884815115bceac452877659a9c7726382531592f43dc29e5d48b7c4100661aed54018cb90bd36cb2eaeba521092570769167acbb95c18d39afdccbcca06c5ce
+  languageName: node
+  linkType: hard
+
+"meshline@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "meshline@npm:3.3.1"
+  peerDependencies:
+    three: ">=0.137"
+  checksum: 10c0/95d5c7c90aca350530f37f9ea5c5e333a66ea0c50416fa6372c24a23321837a4c70d92d6a9a5942ee124484855a2d3fc8ca0656305feb8d8f86aa10513e324e4
   languageName: node
   linkType: hard
 
@@ -741,6 +764,9 @@ __metadata:
     bottom-tip: "npm:^0.1.5"
     cirru-color: "npm:^0.2.4"
     copy-text-to-clipboard: "npm:^3.2.0"
+    dayjs: "npm:^1.11.13"
+    hsluv: "npm:^1.0.1"
+    meshline: "npm:^3.3.1"
     three: "npm:^0.166.1"
     vite: "npm:^5.3.3"
   languageName: unknown

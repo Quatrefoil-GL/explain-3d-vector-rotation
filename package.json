@@ -22,6 +22,9 @@
     "@quatrefoil/utils": "^0.0.3",
     "cirru-color": "^0.2.4",
     "copy-text-to-clipboard": "^3.2.0",
+    "dayjs": "^1.11.13",
+    "hsluv": "^1.0.1",
+    "meshline": "^3.3.1",
     "three": "^0.166.1"
   }
 }
