@@ -13,10 +13,11 @@ Demo http://r.tiye.me/Quatrefoil-GL/expain-3d-vector-rotation/
 从旧开发服务升级时请重启服务并刷新页面，不要沿用旧版本的热重载状态或 Vite 缓存。
 公开 Demo 链接和原 rsync 服务器目录保持不变。
 
-2026-10-21（Asia/Shanghai）验证的候选工具链是 Calcit / `@calcit/procs` **0.30.1-alpha.5**，不是正式 0.30.1 验收。
-正式 0.30.1 当前未列出 macOS 产物，因此这里不冒充已验证正式版；CLI 与 procs 必须保持精确配对。
+当前候选工具链是正式 Calcit / `@calcit/procs` **0.30.1**，CLI 与 procs 必须精确配对。
+正式依赖图由 Linux CI 验收，不使用本地旧 CLI 编译正式图；不把单平台通过当作所有后端兼容保证。
 使用 Node.js 24、Yarn 4.18.0、Vite 8.3.4。Calcit 模块全部锁定正式 tag，不再引用 main 或 commit hash。
-触控 npm 包 0.0.13 只提供现有 CSS；实际控件代码来自正式 Calcit 模块 0.0.31。
+实际模块配对 Touch Control0.0.32、Quatrefoil0.1.10、Markdown0.4.59、UI0.8.0、Respo0.16.124、JS-FFI0.2.5、Quaternion0.2.16和Pointed Prompt0.0.20。
+触控 npm 包 0.0.13 只提供现有 CSS；实际控件代码来自正式 Calcit 模块 0.0.32。
 已移除不再使用的 alpha Meshline 包，绘图使用 Quatrefoil 正式版本所需的 `meshline`。
 
 `load-content` 仍在编译时读取同一份 Markdown，只补齐字符串表达式和只读文件能力合同。
@@ -43,7 +44,7 @@ yarn vite preview --host 127.0.0.1
 ### 前端资源发布
 
 本地默认使用相对资源路径。CI 使用 `VITE_BASE_URL=https://cos-sh.tiye.me/Quatrefoil-GL/explain-3d-vector-rotation/` 构建 CDN 路径。
-PR 只做检查和构建，不上传 COS、不执行 rsync，也不提供已上传的预览地址。
+PR 只做检查和构建，不上传 COS、不执行 rsync，也不提供已上传的预览地址；仅保留相对路径的单次原始构建artifact供本地隔离验收，生产仍使用绝对CDN路径。
 main 发布先上传 `dist/assets` 到对应 COS `assets/` 前缀，Action 的 `public-base-url` 启用内置逐文件内容校验；成功后才执行原服务器部署。
 不复制额外 curl/校验脚本，不修改后端或服务器目录。旧 main revision 跳过发布，同分支部署不互相中断。
 
