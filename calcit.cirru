@@ -6,14 +6,14 @@
     {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |touch-control/ |pointed-prompt/ |quatrefoil/ |respo.calcit/ |respo-ui.calcit/ |respo-markdown.calcit/ |quaternion/ |js-ffi/
-      :type-slots $ {}
+      :type-slots $ {} $ :dispatch-op |app.updater/Op
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
       :defs $ {}
         'Projection $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstruct Projection (:p0 'quaternion.vector/V3) (:scale 'Number) (:shadow 'quaternion.vector/V3) (:x 'Number) (:y 'Number)
           :examples $ []
-          :schema $ :: 'StructDef
+          :schema $ quote StructDef
         'calc-unit-x-axis $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn calc-unit-x-axis (p)
             match p $
@@ -22,8 +22,7 @@
                 v3 (negate c) 0 a
                 / 1 $ sqrt $ sum-squares a c
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'quaternion.vector/V3)
-            :args $ [] 'quaternion.vector/V3
+          :schema $ quote $ Fn quaternion.vector/V3 (-> quaternion.vector/V3)
           :tests $ [] $ %{} 'TestEntry (:name |perpendicular-screen-axes)
             :code $ quote $ do
               assert= (v3 0 0 1)
@@ -39,8 +38,7 @@
                 v3 (* -1 a b) (sum-squares a c) (* -1 b c)
                 / 1 $ sqrt $ sum-squares (* a b) (sum-squares a c) (* b c)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'quaternion.vector/V3)
-            :args $ [] 'quaternion.vector/V3
+          :schema $ quote $ Fn quaternion.vector/V3 (-> quaternion.vector/V3)
         'comp-axis $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-axis ()
             line-segments $ {}
@@ -50,8 +48,7 @@
                 [] ([] 0 0 -100) ([] 0 0 100)
               :material style-line
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'quatrefoil.schema/Shape)
-            :args $ []
+          :schema $ quote $ Fn (-> quatrefoil.schema/Shape)
         'comp-container $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-container ()
             let
@@ -59,9 +56,7 @@
                 s 0.5
                 targets $ [] $ v3 80 70 -50
                 projections $ map targets $ fn (p)
-                  hint-fn $ {}
-                    :args $ [] 'quaternion.vector/V3
-                    :return 'app.comp.container/Projection
+                  hint-fn $ Fn quaternion.vector/V3 $ -> app.comp.container/Projection
                   transform-3d p look-distance s
                 scaled 0.006
               scene ({})
@@ -79,9 +74,7 @@
                       , v3-list
                     :material $ assoc style-bold-line :color 0x44aa44
                   group ({}) & $ map-indexed projections $ fn (idx pro)
-                    hint-fn $ {}
-                      :args $ [] 'Number 'app.comp.container/Projection
-                      :return 'quatrefoil.schema/Shape
+                    hint-fn $ Fn Number app.comp.container/Projection $ -> quatrefoil.schema/Shape
                     let
                         q-point $ v-scale look-distance $ :scale pro
                         distance-v $ v- (:p0 pro) q-point
@@ -103,9 +96,7 @@
                         mesh-line $ {}
                           :points $ map (range 320)
                             fn (idx)
-                              hint-fn $ {}
-                                :args $ [] 'Number
-                                :return $ :: 'List 'Number
+                              hint-fn $ Fn Number $ -> (List Number)
                               v3-list $ v+ q-point
                                 v-scale distance-v $ cos $ * idx 0.02
                                 v-scale next-axis $ sin $ * idx 0.02
@@ -114,8 +105,7 @@
                   point-light $ {} (:color 0xffffff) (:intensity 1.4) (:distance 200)
                     :position $ v3 20 40 50
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'quatrefoil.schema/Component)
-            :args $ []
+          :schema $ quote $ Fn (-> quatrefoil.schema/Component)
         'comp-demo $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-demo ()
             group ({})
@@ -141,8 +131,7 @@
               point-light $ {} (:color 0xffff55) (:intensity 2) (:distance 200)
                 :position $ [] -10 20 0
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'quatrefoil.schema/Component)
-            :args $ []
+          :schema $ quote $ Fn (-> quatrefoil.schema/Component)
         'comp-grid $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-grid (look-distance screen-x screen-y)
             let
@@ -152,9 +141,8 @@
                   :segments $ concat
                     map (range -5 6)
                       fn (i)
-                        hint-fn $ {}
-                          :args $ [] 'Number
-                          :return $ :: 'List $ :: 'List 'Number
+                        hint-fn $ Fn Number $ ->
+                          List $ List Number
                         map
                           []
                             v+
@@ -166,9 +154,8 @@
                           , v3-list
                     map (range -5 6)
                       fn (i)
-                        hint-fn $ {}
-                          :args $ [] 'Number
-                          :return $ :: 'List $ :: 'List 'Number
+                        hint-fn $ Fn Number $ ->
+                          List $ List Number
                         map
                           []
                             v+
@@ -180,8 +167,7 @@
                           , v3-list
                   :material $ {} (:kind :line-basic) (:color 0x6677aa) (:opacity 0.4) (:transparent true)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'quatrefoil.schema/Shape)
-            :args $ [] 'quaternion.vector/V3 'quaternion.vector/V3 'quaternion.vector/V3
+          :schema $ quote $ Fn quaternion.vector/V3 quaternion.vector/V3 quaternion.vector/V3 (-> quatrefoil.schema/Shape)
         'comp-mark-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn comp-mark-point (label color position)
             let
@@ -194,40 +180,36 @@
                 text $ {} (:material material) (:size 6.0) (:depth 0.5) (:text label)
                   :position $ v3 2 0 1
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'quatrefoil.schema/Shape)
-            :args $ [] 'String (:: 'calcit.core/Option 'Number) 'quaternion.vector/V3
+          :schema $ quote $ Fn String (calcit.core/Option Number) quaternion.vector/V3 (-> quatrefoil.schema/Shape)
         'point-label $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn point-label (t idx)
             if (> idx 0) (str t "| " idx) t
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'String)
-            :args $ [] 'String 'Number
+          :schema $ quote $ Fn String Number (-> String)
         'square $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn square (x) (pow x 2)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'Number
+          :schema $ quote $ Fn Number (-> Number)
         'style-bold-line $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-bold-line
             {} (:kind :mesh-line) (:color 0xaaaaff) (:transparent true) (:opacity 0.9) (:depthTest true) (:lineWidth 0.02)
           :examples $ []
-          :schema $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Map Tag Dynamic
         'style-line $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-line
             {} (:kind :line-basic) (:color 0x5555aa) (:opacity 0.9) (:transparent true)
           :examples $ []
-          :schema $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Map Tag Dynamic
         'style-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-point
             {} (:kind :mesh-lambert) (:color 0x808080) (:opacity 0.9)
           :examples $ []
-          :schema $ :: 'Map 'Tag 'Dynamic
+          :schema $ quote $ Map Tag Dynamic
         'sum-squares $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn sum-squares (& xs)
             -> xs (map square) (reduce 0 &+)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:rest 'Number) (:return 'Number)
-            :args $ []
+          :schema $ quote $ Fn & Number (-> Number)
         'transform-3d $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn transform-3d (point look-distance s)
             match point $
@@ -257,8 +239,7 @@
                     z' $ negate r
                   Projection :p0 point :scale r :shadow (v3 x' y' z') :x x' :y y'
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'app.comp.container/Projection)
-            :args $ [] 'quaternion.vector/V3 'quaternion.vector/V3 'Number
+          :schema $ quote $ Fn quaternion.vector/V3 quaternion.vector/V3 Number (-> app.comp.container/Projection)
           :tests $ [] $ %{} 'TestEntry (:name |projection-contract)
             :code $ quote $ let
                 projection $ transform-3d (v3 4 0 -2) (v3 0 0 -2) 0.5
@@ -278,40 +259,42 @@
       :defs $ {}
         'comp-nav $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defcomp comp-nav (menu?)
-            div
+            respo.core/list->
               {} $ :class-name css-nav
-              a $ {} (:inner-text |Menu) (:class-name css/link)
-                :on-click $ fn (e d!)
-                  d! $ Op :toggle-menu
-              if menu? $ div
-                {} $ :class-name css-pop-menu
-                =< nil 24
-                comp-md-block (load-content |explain.md) ({})
-                =< nil 120
+              concat
+                [] $ [] 0 $ a
+                  {} (:inner-text |Menu) (:class-name css/link)
+                    :on-click $ fn (e d!)
+                      d! $ Op :toggle-menu
+                if menu?
+                  [] $ [] 1 $ div
+                    {} $ :class-name css-pop-menu
+                    =< nil 24
+                    comp-md-block (load-content |explain.md) ({})
+                    =< nil 120
+                  []
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.schema/Component)
-            :args $ [] 'Bool
+          :schema $ quote $ Fn Bool (-> respo.schema/Component)
         'css-nav $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-nav
             {} $ |$0 $ merge ui/global
               {} (:color :white) (:position :absolute) (:top 0) (:left 0)
           :examples $ []
-          :schema $ :: 'String
+          :schema $ quote String
         'css-pop-menu $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-pop-menu
             {} $ |$0 $ {} (:max-height |90vh) (:border-radius |6px) (:padding "|8px 8px") (:z-index 900) (:position :fixed) (:left 8) (:top 32) (:overflow :auto)
               :color $ ui/hsl 0 0 30
               :background-color $ ui/hsl 0 0 100 $ Option :some 0.9
           :examples $ []
-          :schema $ :: 'String
+          :schema $ quote String
         'load-content $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defmacro load-content (file)
             read-file $ str |docs/ file
           :examples $ []
-          :schema $ :: 'Macro $ {}
-            :capabilities $ #{} :fs-read
-            :expansion $ :: 'Expr 'String
-            :required $ [] $ :: 'Expr 'String
+          :schema $ quote $ Macro (Expr String)
+            -> $ Expr String
+            :capabilities :fs-read
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.comp.nav
           :require
@@ -328,7 +311,7 @@
           :code $ quote $ def dev?
             = |dev $ .unwrap-or (get-env |mode) |release
           :examples $ []
-          :schema $ :: 'Bool
+          :schema $ quote Bool
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.config
     'app.main $ %{} 'FileEntry
@@ -336,7 +319,7 @@
         '*store $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defref *store false
           :examples $ []
-          :schema $ :: 'Ref 'Bool
+          :schema $ quote $ Ref Bool
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
             match (try-decode-map-as op 'app.updater/Op)
@@ -346,8 +329,7 @@
                 raise $ str |Invalid-menu-operation: error
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Dynamic
+          :schema $ quote $ Fn Dynamic (-> Unit)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             when dev? (load-console-formatter!) (println |Run-in-dev-mode)
@@ -370,46 +352,37 @@
             println |App-started!
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-target ()
             match (respo-dom/query-selector |.page)
               (:some element) element
               (:none) (raise |Missing-.page-mount-target)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'respo.dom/DomElement)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> respo.dom/DomElement) (:features :js-ffi)
         'on-store-change! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-store-change! (store previous) (render-app!)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ [] 'Bool 'Bool
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn Bool Bool (-> Unit) (:features :js-ffi)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (non-nil? build-errors) (hud! |error build-errors)
               do (hud! |ok~ nil) (clear-cache!) (clear-control-loop!) (handle-control-events) (respo/clear-cache!) (remove-watch! *store :changes) (add-watch! *store :changes on-store-change!) (render-app!) (set! js/window.onkeydown handle-key-event) (println |Code-updated.)
             , &unit
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             render-canvas! (comp-container)
               fn (op op-data)
-                hint-fn $ {}
-                  :args $ [] 'Dynamic 'Dynamic
-                  :return 'Unit
+                hint-fn $ Fn Dynamic Dynamic $ -> Unit
                 , &unit
-            respo/render! (mount-target) (comp-nav @*store) dispatch!
+            respo/render! (mount-target) (comp-nav @*store)
+              fn (op)
+                hint-fn $ Fn app.updater/Op $ -> Unit
+                dispatch! op
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Unit)
-            :args $ []
-            :features $ #{} :js-ffi
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
@@ -443,8 +416,7 @@
                     l $ v-length v
                   v-scale v $ / 1 l
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'quaternion.vector/V3)
-            :args $ [] 'quaternion.vector/V3 'quaternion.vector/V3
+          :schema $ quote $ Fn quaternion.vector/V3 quaternion.vector/V3 (-> quaternion.vector/V3)
           :tests $ [] $ %{} 'TestEntry (:name |axis-orientation)
             :code $ quote $ do
               assert= (v3 0 0 1)
@@ -457,8 +429,7 @@
               :v3 x y z
               sqrt $ + (* x x) (* y y) (* z z)
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Number)
-            :args $ [] 'quaternion.vector/V3
+          :schema $ quote $ Fn quaternion.vector/V3 (-> Number)
           :tests $ [] $ %{} 'TestEntry (:name |vector-length)
             :code $ quote $ do
               assert= 5 $ v-length $ v3 3 4 0
@@ -469,9 +440,8 @@
               :v3 x y z
               [] x y z
           :examples $ []
-          :schema $ :: 'Fn $ {}
-            :args $ [] 'quaternion.vector/V3
-            :return $ :: 'List 'Number
+          :schema $ quote $ Fn quaternion.vector/V3
+            -> $ List Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.math
           :require $ quaternion.vector :refer $ v-scale v3
@@ -480,15 +450,14 @@
         'Op $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defenum Op (:toggle-menu)
           :examples $ []
-          :schema $ :: 'EnumDef
+          :schema $ quote EnumDef
         'updater $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn updater (menu? op)
             match op $
               :toggle-menu
               not menu?
           :examples $ []
-          :schema $ :: 'Fn $ {} (:return 'Bool)
-            :args $ [] 'Bool 'app.updater/Op
+          :schema $ quote $ Fn Bool app.updater/Op (-> Bool)
           :tests $ [] $ %{} 'TestEntry (:name |menu-toggle)
             :code $ quote $ do
               assert= true $ updater false $ Op :toggle-menu
