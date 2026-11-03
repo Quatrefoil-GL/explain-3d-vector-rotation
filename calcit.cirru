@@ -10,8 +10,13 @@
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
       :defs $ {}
+        'MaterialValue $ %{} 'CodeEntry
+          :doc "|本示例材质值域为 Tag、Number、Bool，不代表库的全部材质 API。style-point 的 JS 材质合同额外使用 JsNullish 保留原未指定颜色时写入 nil 的语义。"
+          :code $ quote $ defunion MaterialValue Tag Number Bool
+          :examples $ []
+          :schema $ quote UnionDef
         'Projection $ %{} 'CodeEntry (:doc |)
-          :code $ quote $ defstruct Projection (:p0 'quaternion.vector/V3) (:scale 'Number) (:shadow 'quaternion.vector/V3) (:x 'Number) (:y 'Number)
+          :code $ quote $ defstruct Projection (:p0 quaternion.vector/V3) (:scale Number) (:shadow quaternion.vector/V3) (:x Number) (:y Number)
           :examples $ []
           :schema $ quote StructDef
         'calc-unit-x-axis $ %{} 'CodeEntry (:doc |)
@@ -194,17 +199,17 @@
           :code $ quote $ def style-bold-line
             {} (:kind :mesh-line) (:color 0xaaaaff) (:transparent true) (:opacity 0.9) (:depthTest true) (:lineWidth 0.02)
           :examples $ []
-          :schema $ quote $ Map Tag Dynamic
+          :schema $ quote $ Map Tag app.comp.container/MaterialValue
         'style-line $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-line
             {} (:kind :line-basic) (:color 0x5555aa) (:opacity 0.9) (:transparent true)
           :examples $ []
-          :schema $ quote $ Map Tag Dynamic
+          :schema $ quote $ Map Tag app.comp.container/MaterialValue
         'style-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-point
             {} (:kind :mesh-lambert) (:color 0x808080) (:opacity 0.9)
           :examples $ []
-          :schema $ quote $ Map Tag Dynamic
+          :schema $ quote $ Map Tag (JsNullish app.comp.container/MaterialValue)
         'sum-squares $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn sum-squares (& xs)
             -> xs (map square) (reduce 0 &+)
@@ -269,9 +274,9 @@
                 if menu?
                   [] $ [] 1 $ div
                     {} $ :class-name css-pop-menu
-                    =< nil 24
+                    space-y 24
                     comp-md-block (load-content |explain.md) ({})
-                    =< nil 120
+                    space-y 120
                   []
           :examples $ []
           :schema $ quote $ Fn Bool (-> respo.schema/Component)
@@ -300,7 +305,7 @@
           :require
             respo.core :refer $ defcomp div a
             respo.css :refer $ defstyle
-            respo.comp.space :refer $ =<
+            respo.comp.space :refer $ space-y
             respo-ui.css :as css
             respo-md.comp.md :refer $ comp-md-block
             app.updater :refer $ Op
@@ -441,7 +446,7 @@
               [] x y z
           :examples $ []
           :schema $ quote $ Fn quaternion.vector/V3
-            -> $ List Number
+            -> $ Tuple Number Number Number
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.math
           :require $ quaternion.vector :refer $ v-scale v3

@@ -1,11 +1,11 @@
 
-{} (:calcit-version |0.32.1)
+{} (:calcit-version |0.34.2)
   :version |0.0.4
-  :dependencies $ {} (|Triadica/touch-control |0.0.35)
-    |Quatrefoil-GL/quatrefoil |0.2.0
-    |Respo/respo-markdown.calcit |0.5.0
-    |Respo/respo-ui.calcit |0.9.0
-    |Respo/respo.calcit |0.17.1
-    |calcit-lang/js-ffi |0.2.9
-    |calcit-lang/quaternion |0.2.19
-    |mvc-works/pointed-prompt |0.0.24
+  :dependencies $ {} (|Triadica/touch-control |0.0.37)
+    |Quatrefoil-GL/quatrefoil |0.3.2
+    |Respo/respo-markdown.calcit |0.7.0
+    |Respo/respo-ui.calcit |0.14.0
+    |Respo/respo.calcit |0.19.1
+    |calcit-lang/js-ffi |0.2.10
+    |calcit-lang/quaternion |0.2.20
+    |mvc-works/pointed-prompt |0.0.25
