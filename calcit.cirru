@@ -331,6 +331,11 @@
             , &unit
           :examples $ []
           :schema $ quote $ Fn app.updater/Op (-> Unit)
+        'ignore-scene-event! $ %{} 'CodeEntry
+          :doc "|The static scene has no operation dispatch. Navigation uses the separate typed Respo callback."
+          :code $ quote $ defn ignore-scene-event! (_op _payload) &unit
+          :examples $ []
+          :schema $ quote $ Fn Op Payload (-> Unit) (:generics Op Payload)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             when dev? (load-console-formatter!) (println |Run-in-dev-mode)
@@ -374,10 +379,7 @@
           :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
-            render-canvas! (comp-container)
-              fn (op op-data)
-                hint-fn $ Fn Dynamic Dynamic $ -> Unit
-                , &unit
+            render-canvas! (comp-container) ignore-scene-event!
             respo/render! (mount-target) (comp-nav @*store)
               fn (op)
                 hint-fn $ Fn app.updater/Op $ -> Unit
