@@ -6,7 +6,7 @@
     {} (:description |) (:init-fn 'app.main/main!) (:mode :js) (:reload-fn 'app.main/reload!) (:target :browser)
       :feature-policy $ {}
       :modules $ [] |touch-control/ |pointed-prompt/ |quatrefoil/ |respo.calcit/ |respo-ui.calcit/ |respo-markdown.calcit/ |quaternion/ |js-ffi/
-      :type-slots $ {} $ :dispatch-op |app.updater/Op
+      :type-slots $ {} $ :dispatch-op 'app.updater/Op
   :files $ {}
     'app.comp.container $ %{} 'FileEntry
       :defs $ {}
@@ -214,7 +214,7 @@
           :code $ quote $ defn sum-squares (& xs)
             -> xs (map square) (reduce 0 &+)
           :examples $ []
-          :schema $ quote $ Fn & Number (-> Number)
+          :schema $ quote $ Fn (& Number) (-> Number)
         'transform-3d $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn transform-3d (point look-distance s)
             match point $
@@ -327,14 +327,10 @@
           :schema $ quote $ Ref Bool
         'dispatch! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn dispatch! (op)
-            match (try-decode-map-as op 'app.updater/Op)
-              (:ok typed-op)
-                reset! *store $ updater @*store typed-op
-              (:err error)
-                raise $ str |Invalid-menu-operation: error
+            reset! *store $ updater @*store op
             , &unit
           :examples $ []
-          :schema $ quote $ Fn Dynamic (-> Unit)
+          :schema $ quote $ Fn app.updater/Op (-> Unit)
         'main! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn main! ()
             when dev? (load-console-formatter!) (println |Run-in-dev-mode)
