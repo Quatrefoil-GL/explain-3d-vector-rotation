@@ -71,7 +71,7 @@
                     :position $ v3 0 0.9 -0.2
                   ambient-light $ {} $ :color 0x666666
                   comp-axis
-                  comp-mark-point |C (Option :some 0xffffff) look-distance
+                  comp-mark-point |C (Some 0xffffff) look-distance
                   mesh-line $ {}
                     :points $ map
                       [] (v-scale look-distance 5)
@@ -85,19 +85,19 @@
                         distance-v $ v- (:p0 pro) q-point
                         next-axis $ v-scale (cross-unit distance-v look-distance) (v-length distance-v)
                       group ({})
-                        comp-mark-point |P (Option :some 0xffffff) (:p0 pro)
+                        comp-mark-point |P (Some 0xffffff) (:p0 pro)
                         mesh-line $ {}
                           :points $ map
                             [] (:p0 pro) q-point
                             , v3-list
                           :material $ assoc style-bold-line :color 0xccccff
-                        comp-mark-point |Q (Option :none) q-point
+                        comp-mark-point |Q None q-point
                         mesh-line $ {}
                           :points $ map
                             [] q-point $ v+ q-point next-axis
                             , v3-list
                           :material $ assoc style-bold-line :color 0xccccff
-                        comp-mark-point |R (Option :some 0xaaaaff) (v+ q-point next-axis)
+                        comp-mark-point |R (Some 0xaaaaff) (v+ q-point next-axis)
                         mesh-line $ {}
                           :points $ map (range 320)
                             fn (idx)
@@ -106,7 +106,7 @@
                                 v-scale distance-v $ cos $ * idx 0.02
                                 v-scale next-axis $ sin $ * idx 0.02
                           :material $ assoc style-bold-line :color 0xff5533
-                  comp-mark-point |O (Option :none) (v3 0 0 0)
+                  comp-mark-point |O None $ v3 0 0 0
                   point-light $ {} (:color 0xffffff) (:intensity 1.4) (:distance 200)
                     :position $ v3 20 40 50
           :examples $ []
@@ -185,7 +185,7 @@
                 text $ {} (:material material) (:size 6.0) (:depth 0.5) (:text label)
                   :position $ v3 2 0 1
           :examples $ []
-          :schema $ quote $ Fn String (calcit.core/Option Number) quaternion.vector/V3 (-> quatrefoil.schema/Shape)
+          :schema $ quote $ Fn String (Option Number) quaternion.vector/V3 (-> quatrefoil.schema/Shape)
         'point-label $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn point-label (t idx)
             if (> idx 0) (str t "| " idx) t
@@ -199,17 +199,17 @@
           :code $ quote $ def style-bold-line
             {} (:kind :mesh-line) (:color 0xaaaaff) (:transparent true) (:opacity 0.9) (:depthTest true) (:lineWidth 0.02)
           :examples $ []
-          :schema $ quote $ Map Tag app.comp.container/MaterialValue
+          :schema $ quote $ Map Tag MaterialValue
         'style-line $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-line
             {} (:kind :line-basic) (:color 0x5555aa) (:opacity 0.9) (:transparent true)
           :examples $ []
-          :schema $ quote $ Map Tag app.comp.container/MaterialValue
+          :schema $ quote $ Map Tag MaterialValue
         'style-point $ %{} 'CodeEntry (:doc |)
           :code $ quote $ def style-point
             {} (:kind :mesh-lambert) (:color 0x808080) (:opacity 0.9)
           :examples $ []
-          :schema $ quote $ Map Tag (JsNullish app.comp.container/MaterialValue)
+          :schema $ quote $ Map Tag (JsNullish MaterialValue)
         'sum-squares $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn sum-squares (& xs)
             -> xs (map square) (reduce 0 &+)
@@ -244,7 +244,7 @@
                     z' $ negate r
                   Projection :p0 point :scale r :shadow (v3 x' y' z') :x x' :y y'
           :examples $ []
-          :schema $ quote $ Fn quaternion.vector/V3 quaternion.vector/V3 Number (-> app.comp.container/Projection)
+          :schema $ quote $ Fn quaternion.vector/V3 quaternion.vector/V3 Number (-> Projection)
           :tests $ [] $ %{} 'TestEntry (:name |projection-contract)
             :code $ quote $ let
                 projection $ transform-3d (v3 4 0 -2) (v3 0 0 -2) 0.5
@@ -290,7 +290,7 @@
           :code $ quote $ defstyle css-pop-menu
             {} $ |$0 $ {} (:max-height |90vh) (:border-radius |6px) (:padding "|8px 8px") (:z-index 900) (:position :fixed) (:left 8) (:top 32) (:overflow :auto)
               :color $ ui/hsl 0 0 30
-              :background-color $ ui/hsl 0 0 100 $ Option :some 0.9
+              :background-color $ ui/hsl 0 0 100 $ Some 0.9
           :examples $ []
           :schema $ quote String
         'load-content $ %{} 'CodeEntry (:doc |)
@@ -460,7 +460,7 @@
               :toggle-menu
               not menu?
           :examples $ []
-          :schema $ quote $ Fn Bool app.updater/Op (-> Bool)
+          :schema $ quote $ Fn Bool Op (-> Bool)
           :tests $ [] $ %{} 'TestEntry (:name |menu-toggle)
             :code $ quote $ do
               assert= true $ updater false $ Op :toggle-menu
