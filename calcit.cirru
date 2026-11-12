@@ -61,7 +61,7 @@
                 s 0.5
                 targets $ [] $ v3 80 70 -50
                 projections $ map targets $ fn (p)
-                  hint-fn $ Fn quaternion.vector/V3 $ -> app.comp.container/Projection
+                  hint-fn $ Fn quaternion.vector/V3 $ -> Projection
                   transform-3d p look-distance s
                 scaled 0.006
               scene ({})
@@ -79,7 +79,7 @@
                       , v3-list
                     :material $ assoc style-bold-line :color 0x44aa44
                   group ({}) & $ map-indexed projections $ fn (idx pro)
-                    hint-fn $ Fn Number app.comp.container/Projection $ -> quatrefoil.schema/Shape
+                    hint-fn $ Fn Number Projection $ -> quatrefoil.schema/Shape
                     let
                         q-point $ v-scale look-distance $ :scale pro
                         distance-v $ v- (:p0 pro) q-point
