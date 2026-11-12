@@ -330,7 +330,7 @@
             reset! *store $ updater @*store op
             , &unit
           :examples $ []
-          :schema $ quote $ Fn app.updater/Op (-> Unit)
+          :schema $ quote $ Fn app.updater/Op (-> Unit) (:features :state)
         'ignore-scene-event! $ %{} 'CodeEntry
           :doc "|The static scene has no operation dispatch. Navigation uses the separate typed Respo callback."
           :code $ quote $ defn ignore-scene-event! (_op _payload) &unit
@@ -358,7 +358,7 @@
             println |App-started!
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'mount-target $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn mount-target ()
             match (respo-dom/query-selector |.page)
@@ -369,14 +369,14 @@
         'on-store-change! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-store-change! (store previous) (render-app!)
           :examples $ []
-          :schema $ quote $ Fn Bool Bool (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn Bool Bool (-> Unit) (:features :js-ffi :state)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (non-nil? build-errors) (hud! |error build-errors)
               do (hud! |ok~ nil) (clear-cache!) (clear-control-loop!) (handle-control-events) (respo/clear-cache!) (remove-watch! *store :changes) (add-watch! *store :changes on-store-change!) (render-app!) (set! js/window.onkeydown handle-key-event) (println |Code-updated.)
             , &unit
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
         'render-app! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn render-app! ()
             render-canvas! (comp-container) ignore-scene-event!
@@ -385,7 +385,7 @@
                 hint-fn $ Fn app.updater/Op $ -> Unit
                 dispatch! op
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi)
+          :schema $ quote $ Fn (-> Unit) (:features :js-ffi :state)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
