@@ -279,7 +279,7 @@
                     space-y 120
                   []
           :examples $ []
-          :schema $ quote $ Fn Bool (-> respo.schema/Component)
+          :schema $ quote $ Fn Bool (-> respo.schema/Component) (:features :state)
         'css-nav $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defstyle css-nav
             {} $ |$0 $ merge ui/global
@@ -369,7 +369,7 @@
         'on-store-change! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn on-store-change! (store previous) (render-app!)
           :examples $ []
-          :schema $ quote $ Fn Bool Bool (-> Unit) (:features :js-ffi :state)
+          :schema $ quote $ Fn Bool Bool (-> Unit) (:features :io :js-ffi :state)
         'reload! $ %{} 'CodeEntry (:doc |)
           :code $ quote $ defn reload! ()
             if (non-nil? build-errors) (hud! |error build-errors)
@@ -385,7 +385,7 @@
                 hint-fn $ Fn app.updater/Op $ -> Unit
                 dispatch! op
           :examples $ []
-          :schema $ quote $ Fn (-> Unit) (:features :js-ffi :state)
+          :schema $ quote $ Fn (-> Unit) (:features :io :js-ffi :state)
       :ns $ %{} 'NsEntry (:doc |)
         :code $ quote $ ns app.main
           :require
