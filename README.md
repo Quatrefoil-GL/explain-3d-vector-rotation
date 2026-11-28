@@ -3,9 +3,9 @@ Explain 3D vector rotation
 
 Demo: http://r.tiye.me/Quatrefoil-GL/expain-3d-vector-rotation/
 
-### Calcit 0.45.1 使用说明
+### Calcit 0.46.0 使用说明
 
-升级时请同时使用正式 Calcit 与 `@calcit/procs` 0.45.1、Quatrefoil 0.3.9 及配套 Respo 0.19.18、Markdown 0.9.9、UI 0.16.5、Quaternion 0.2.27 和 JS-FFI 0.2.24，重新安装依赖并生成 JS。
+升级时请同时使用正式 Calcit 与 `@calcit/procs` 0.46.0、Quatrefoil 0.3.10 及配套 Respo 0.20.0、Markdown 0.9.10、UI 0.16.6、Quaternion 0.2.28 和 JS-FFI 0.2.26，重新安装依赖并生成 JS。
 静态三维场景的回调接收并忽略两项输入，菜单仍通过具名 `Op` 开关说明。
 
 ### 历史：Calcit 0.37.0
